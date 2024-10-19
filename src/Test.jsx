@@ -1,43 +1,55 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-let id = 0
+let count=0
 const Test = () => {
-    
-    let [inputv,setinputv] = useState("")
-    let [output,setoutput] = useState([])
-    
-    let add =()=>{
-       setoutput([...output,inputv]) 
-    }
-    useEffect(()=>{
-      if(output.length>0){
-        localStorage.setItem("list", JSON.stringify(output)) 
-      }
-    
-    },[output])
+  let [input,setinput] = useState("")
+  let [output,setoutput] = useState([])
+  let submit=()=>{
+    setoutput([...output,input])
+    setinput(" ")
+  }
 
-    useEffect(()=>{
-        let result = JSON.parse(localStorage.getItem('list'))
-        setoutput(result)
-    },[])
-
-    let remove=(rv)=>{
-        let rem= output.filter((e)=>e!==rv)
-        setoutput(rem)
+  // data input
+  useEffect(()=>{
+    if(output.length>0){
+      localStorage.setItem("list",JSON.stringify(output))
     }
+  },[output])
+
+  // dataoutput
+
+  useEffect(()=>{
+  let values =JSON.parse(localStorage.getItem("list"))
+  setoutput(values)
+  },[])
+
+  let cancel = (cav)=>{
+   let filvalue= output.filter((e)=>e!==cav)
+   setoutput(filvalue)
+  }
   return (
     <div>
-      <input type="text"  value={inputv} onChange={(e)=>setinputv(e.target.value)} className='border border-black'/>
-      <button onClick={add} className='border border-black'>add</button>
-          {  
-            output.map((e)=>(
-                <div key={id++} className='flex m-3 ml-2'> 
-                    <h1>{e}</h1>
-                    <button onClick={()=>remove(e)}>❌</button>
-                </div>
-              
-            ))
-          }
+        <h1 className='text-red-500 font-bold text-5xl text-center'>TODO APP</h1>
+        <div className='text-center space-x-4'>
+      <input type="text" onChange={(e)=>setinput(e.target.value)} value={input}
+       className='border-2 border-black w-[500px] rounded-lg  h-[50px] text-xl'/>
+      <button onClick={submit} className='border-2 border-black  h-[50px] rounded-xl w-24 text-xl'>ADD</button>
+      </div>
+      <div>
+      {
+        output.map((e,i)=>(
+          <div key={count++} className=''>
+           <div className='flex border-2 border-red-400 justify-around m-2 p-1 '>
+            <div><h1>{e}</h1></div>
+            <div className='mx-1'>
+               <button className='text-2xl' onClick={()=>cancel(e)}>❌</button>
+              <button className='text-2xl'  onClick={()=>cancel(e)}>🧑‍💻</button>
+            </div>
+          </div>
+          </div>
+        ))
+      }
+      </div>
     </div>
   )
 }
